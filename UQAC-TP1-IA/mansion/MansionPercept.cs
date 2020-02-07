@@ -35,12 +35,13 @@ namespace UQAC_TP1_IA.mansion
     /// </summary>
     public class MansionPercept : IPercept
     {
-
         public readonly List<RoomState> rooms; // ou juste liste e booléen ?
+        public readonly Position PositionAgent;
         
-        public MansionPercept(List<RoomState> rooms)
+        public MansionPercept(Position positionAgent, List<RoomState> rooms = null)
         {
             this.rooms = rooms;
+            PositionAgent = positionAgent;
         }
 
 
@@ -51,8 +52,7 @@ namespace UQAC_TP1_IA.mansion
             {
                 roomsCopy.Add(new RoomState(room.State, room.Position.Copy()));
             }
-            return new MansionPercept(roomsCopy);
+            return new MansionPercept(PositionAgent.Copy(), roomsCopy);
         }
-
     }
 }

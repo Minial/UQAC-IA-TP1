@@ -23,7 +23,7 @@ namespace UQAC_TP1_IA
             var envThread = new Thread(envRef);
             envThread.Start();
             
-            var initialAgentState = new MansionState(new Position(0,0));
+            var initialAgentState = new MansionState(new MansionPercept(new Position(0,0)));
             var agentRef = new ThreadStart(() => agent.Run(initialAgentState));
             var agentThread = new Thread(agentRef);
             agentThread.Start();

@@ -15,11 +15,9 @@ namespace UQAC_TP1_IA.mansion
     public class MansionState : IState 
     {
         public readonly MansionPercept Percept;
-        public readonly Position PositionAgent;
         
-        public MansionState(Position positionAgent = null, MansionPercept percept = null)
+        public MansionState(MansionPercept percept = null)
         {
-            PositionAgent = positionAgent;
             Percept = percept;
         }
 
@@ -42,10 +40,12 @@ namespace UQAC_TP1_IA.mansion
             var otherStateMansion = (MansionState) obj;
             if (otherStateMansion.Percept == null ^ Percept == null)
                 return false;
-            if (otherStateMansion.PositionAgent == null ^ PositionAgent == null)
+            if (otherStateMansion.Percept == null && Percept == null)
+                return true;
+            if (otherStateMansion.Percept.PositionAgent == null ^ Percept.PositionAgent == null)
                 return false;
             
-            if (otherStateMansion.PositionAgent != null && !otherStateMansion.PositionAgent.Equals(PositionAgent))
+            if (otherStateMansion.Percept.PositionAgent != null && !otherStateMansion.Percept.PositionAgent.Equals(Percept.PositionAgent))
                 return false;
 
             static bool StateCleanPredicate(RoomState room) => room.State == RoomStateEnum.Clean;

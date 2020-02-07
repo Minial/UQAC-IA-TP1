@@ -65,11 +65,11 @@ namespace UQAC_TP1_IA.core
 
             while (ImAlive())
             {
+                Thread.Sleep(500);
                 var percept = _sensor.Observe();
                 var action = SimpleProblemSolvingAgent(percept);
                 if (action != null)
                     _effector.DoAction(action);
-                Thread.Sleep(500);
             }
         }
 

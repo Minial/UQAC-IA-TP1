@@ -24,6 +24,8 @@ namespace UQAC_TP1_IA.mansion
         public const int SIZE = 5;
 
         public MansionAgent agent;
+        public Position PositionAgent;
+
         public List<Room> rooms;
         public MansionPerformanceMeasure performanceMeasure;
 
@@ -71,7 +73,7 @@ namespace UQAC_TP1_IA.mansion
                 else 
                     roomStates.Add(new RoomState(RoomStateEnum.Dirt, room.pos.Copy()));
             }
-            return new MansionPercept(roomStates);
+            return new MansionPercept(PositionAgent.Copy(), roomStates);
         }
 
         /// <summary>
@@ -80,7 +82,7 @@ namespace UQAC_TP1_IA.mansion
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void Action(IAction action, Agent _)
         {
-            var positionAgent = agent.PositionAgent;
+            var positionAgent = PositionAgent;
             if (action == MansionAction.LEFT && positionAgent.x > 0)
                 positionAgent.x--;
             else if (action == MansionAction.TOP && positionAgent.y > 0) 
@@ -103,16 +105,12 @@ namespace UQAC_TP1_IA.mansion
                 if (room.dirt) performanceMeasure.dirtPick++;
                 room.Reset();
             }
-            else if (action == MansionAction.STUCK)
-            {
-                
-            }
         }
 
         public void SetAgent(Agent agent, Position initialPosition)
         {
             this.agent = (MansionAgent) agent;
-            this.agent.PositionAgent = initialPosition;
+            PositionAgent = initialPosition;
             performanceMeasure = new MansionPerformanceMeasure();
         }
         
@@ -249,7 +247,7 @@ namespace UQAC_TP1_IA.mansion
                     Console.WriteLine();
                     Console.WriteLine(new string('-', MansionEnv.SIZE * 6));
                 }
-                Console.Write(" {0}{1}{2} |", room.dirt ? "P" : " ", room.diamond ? "D" : " ", room.pos.Equals(_environment.agent.PositionAgent) ? "A" : " ");
+                Console.Write(" {0}{1}{2} |", room.dirt ? "P" : " ", room.diamond ? "D" : " ", room.pos.Equals(_environment.PositionAgent) ? "A" : " ");
                 i++;
             }
 

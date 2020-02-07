@@ -4,9 +4,6 @@ namespace UQAC_TP1_IA.mansion
 {
     public class MansionAgent : Agent
     {
-        
-        public Position PositionAgent;
-
         public MansionAgent(Sensor sensor, Effector effector, AgentFunction agentFunction) : base(sensor, effector, agentFunction)
         {
         }
@@ -18,7 +15,7 @@ namespace UQAC_TP1_IA.mansion
 
         protected override IState UpdateState(IState state, IPercept percept)
         {
-            return new MansionState(PositionAgent, (MansionPercept) percept);
+            return new MansionState((MansionPercept) percept);
         }
 
         protected override IState FormulateGoal(IState state)

@@ -38,13 +38,13 @@ namespace UQAC_TP1_IA.mansion
             var actions = new List<IAction>();
             actions.Add(MansionAction.PICK); // l'ordre important je pense ??
             actions.Add(MansionAction.CLEAN);
-            if (mansionState.PositionAgent.x > 0) 
+            if (mansionState.Percept.PositionAgent.x > 0) 
                 actions.Add(MansionAction.LEFT);
-            if (mansionState.PositionAgent.x < MansionEnv.SIZE-1) 
+            if (mansionState.Percept.PositionAgent.x < MansionEnv.SIZE-1) 
                 actions.Add(MansionAction.RIGHT);
-            if (mansionState.PositionAgent.y > 0) 
+            if (mansionState.Percept.PositionAgent.y > 0) 
                 actions.Add(MansionAction.TOP);
-            if (mansionState.PositionAgent.y < MansionEnv.SIZE - 1) 
+            if (mansionState.Percept.PositionAgent.y < MansionEnv.SIZE - 1) 
                 actions.Add(MansionAction.BOTTOM);
             return actions;
         }
@@ -65,21 +65,20 @@ namespace UQAC_TP1_IA.mansion
         public IState Successor(IState state, IAction action)
         {
             var mansionState = (MansionState) state;
-            var newPosition = mansionState.PositionAgent.Copy();
             var newPercept = mansionState.Percept.Copy();
             if (action == MansionAction.TOP)
-                newPosition.y--;
+                newPercept.PositionAgent.y--;
             else if (action == MansionAction.BOTTOM)
-                newPosition.y++;
+                newPercept.PositionAgent.y++;
             else if (action == MansionAction.LEFT)
-                newPosition.x--;
+                newPercept.PositionAgent.x--;
             else if (action == MansionAction.RIGHT)
-                newPosition.x++;
+                newPercept.PositionAgent.x++;
             else if (action == MansionAction.CLEAN)
-                newPercept.rooms.ElementAt(mansionState.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Clean;
+                newPercept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Clean;
             else if (action == MansionAction.PICK)
-                newPercept.rooms.ElementAt(mansionState.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Clean; // en vrai pas forcement, peut content dirt
-            return new MansionState(newPosition, newPercept);
+                newPercept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Clean; // en vrai pas forcement, peut content dirt
+            return new MansionState(newPercept);
         }
 
 

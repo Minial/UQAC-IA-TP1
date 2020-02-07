@@ -15,7 +15,6 @@ namespace UQAC_TP1_IA.mansion
         public static readonly MansionAction TOP = new MansionAction("top");
         public static readonly MansionAction CLEAN = new MansionAction("clean");
         public static readonly MansionAction PICK = new MansionAction("pick");
-        public static readonly MansionAction STUCK = new MansionAction("stuck");
 
         
         private readonly string _value;
