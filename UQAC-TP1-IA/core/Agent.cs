@@ -12,13 +12,13 @@ namespace UQAC_TP1_IA.core
     /// - Desire: état désiré
     /// - Intention: liste d'action a effectuer
     /// </summary>
-    public class BDI
+    public class MentalState
     {
         public IState Belief;
         public IState Desire;
         public List<IAction> Intention;
         
-        public BDI(IState initialBelief)
+        public MentalState(IState initialBelief)
         {
             Belief = initialBelief;
             Intention = new List<IAction>();
@@ -43,7 +43,7 @@ namespace UQAC_TP1_IA.core
         private readonly Sensor _sensor;
         private readonly Effector _effector;
         private readonly AgentFunction _function;
-        public BDI MentalState;
+        public MentalState MentalState;
         
         
         protected Agent(Sensor sensor, Effector effector, AgentFunction agentFunction)
@@ -61,7 +61,7 @@ namespace UQAC_TP1_IA.core
         /// </summary>
         public void Run(IState initialState)
         {
-            MentalState = new BDI(initialState);
+            MentalState = new MentalState(initialState);
 
             while (ImAlive())
             {
@@ -84,7 +84,7 @@ namespace UQAC_TP1_IA.core
         /// @param percept: la perception actuelle de l'environnement
         /// @return IAction: la prochaine action a effectué, null si failure
         /// </summary>
-        private IAction SimpleProblemSolvingAgent(Percept percept)
+        private IAction SimpleProblemSolvingAgent(IPercept percept)
         {
             MentalState.Belief = UpdateState(MentalState.Belief, percept);
             if (!MentalState.Intention.Any())
@@ -110,7 +110,7 @@ namespace UQAC_TP1_IA.core
         /// @param percept : perception actuelle de l'environnement
         /// @return : le nouvel état généré
         /// </summary>
-        protected abstract IState UpdateState(IState state, Percept percept);
+        protected abstract IState UpdateState(IState state, IPercept percept);
 
         /// <summary>
         /// @param state : l'état actuel de l'agent 

@@ -16,7 +16,7 @@ namespace UQAC_TP1_IA.mansion
             return true;
         }
 
-        protected override IState UpdateState(IState state, Percept percept)
+        protected override IState UpdateState(IState state, IPercept percept)
         {
             return new MansionState(PositionAgent, (MansionPercept) percept);
         }

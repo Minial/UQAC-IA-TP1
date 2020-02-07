@@ -36,7 +36,7 @@ namespace UQAC_TP1_IA.core
         /// @param state :
         /// @return Node : 
         /// </summary>
-        protected Node MakeNode(IState state)
+        protected static Node MakeNode(IState state)
         {
             throw new System.NotImplementedException();
         }
@@ -49,7 +49,7 @@ namespace UQAC_TP1_IA.core
         /// @param action : action permettant d'arriver à l'enfant
         /// @return Node : le noeud enfin généré
         /// </summary>
-        protected Node ChildNode(IProblem problem, Node parent, IAction action)
+        protected static Node ChildNode(IProblem problem, Node parent, IAction action)
         {
             return new Node(parent, parent.Depth+1, 0, problem.Successor(parent.State, action), action);
         }
@@ -60,7 +60,7 @@ namespace UQAC_TP1_IA.core
         /// @param node : le noeud à remonter
         /// @return List<IAction> : les actions de la racine jusqu'au noeud
         /// </summary>
-        protected List<IAction> Solution(Node node)
+        protected static List<IAction> Solution(Node node)
         {
             var actions = new List<IAction>();
             while (node.Parent != null)

@@ -33,7 +33,7 @@ namespace UQAC_TP1_IA.mansion
     /// Méthodes :
     ///     - Convertir() : convertir le manoir en perception du manoir
     /// </summary>
-    public class MansionPercept : Percept
+    public class MansionPercept : IPercept
     {
 
         public readonly List<RoomState> rooms; // ou juste liste e booléen ?

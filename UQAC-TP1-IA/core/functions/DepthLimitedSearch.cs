@@ -5,11 +5,6 @@ namespace UQAC_TP1_IA.core.functions
 {
     public class DepthLimitedSearch : AgentFunction 
     {
-
-        public DepthLimitedSearch() {
-            
-        }
-
         /// <summary>
         /// @param Problem 
         /// @return

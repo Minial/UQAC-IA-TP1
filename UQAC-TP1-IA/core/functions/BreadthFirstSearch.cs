@@ -1,19 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace UQAC_TP1_IA.core.functions
 {
     
     /// <summary>
-    ///
-    /// (juste pour tester si ça marche)
-    /// 
+    /// Simple parcours en largeur
     /// </summary>
     public class BreadthFirstSearch : AgentFunction
     {
         public override List<IAction> Search(IProblem problem)
         {
-            
             var node = new Node(null, 0, 0, problem.InitialState(), null);
             var frontier = new Queue<Node>();
             frontier.Enqueue(node);

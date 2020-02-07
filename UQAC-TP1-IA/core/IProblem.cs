@@ -11,6 +11,8 @@ namespace UQAC_TP1_IA.core
     ///     + la fonction permettant de générer l'état obtenue après une action : [Successor(IState, IAction) : IState]
     /// - Le test de but : [GoalTest(IState) : bool]
     /// - Le coût d'un chemin pour aller d'un état à un autre en effectuant un action : [PathCost(IState, IAction, IState) : int]
+    ///
+    /// Voir [MansionProblem] pour l'implémentation pour le problème du manoir
     /// </summary>
     public interface IProblem
     {

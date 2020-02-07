@@ -58,7 +58,7 @@ namespace UQAC_TP1_IA.mansion
         /// @return
         /// </summary>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public Percept Observe() {
+        public IPercept Observe() {
             var roomStates = new List<RoomState>();
             foreach (var room in rooms)
             {
