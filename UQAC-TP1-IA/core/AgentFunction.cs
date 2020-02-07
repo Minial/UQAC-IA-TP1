@@ -51,7 +51,9 @@ namespace UQAC_TP1_IA.core
         /// </summary>
         protected static Node ChildNode(IProblem problem, Node parent, IAction action)
         {
-            return new Node(parent, parent.Depth+1, 0, problem.Successor(parent.State, action), action);
+            var childState = problem.Successor(parent.State, action);
+            var cost = problem.PathCost(parent.State, action, childState);
+            return new Node(parent, parent.Depth+1, cost, problem.Successor(parent.State, action), action);
         }
 
         /// <summary>
