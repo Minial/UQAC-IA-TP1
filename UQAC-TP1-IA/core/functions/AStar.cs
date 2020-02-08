@@ -27,7 +27,7 @@ namespace UQAC_TP1_IA.core.functions
             frontier.Add(node);
             do
             {
-                // Si la frontiere est vide, on arrête
+                // Si la frontiere est vide, on arrï¿½te
                 if (frontier.Count == 0)
                 {
                     return null;
@@ -40,9 +40,9 @@ namespace UQAC_TP1_IA.core.functions
                 // On prend le noeud avec le cout le plus petit
                 node = frontier[0];
                 frontier.RemoveAt(0);
-                // On l'ajoute à la lsite des noeuds explorés si besoin
+                // On l'ajoute ï¿½ la lsite des noeuds explorï¿½s si besoin
                 if (!explored.Contains(node.State)) explored.Add(node.State);
-                // On génére les enfants
+                // On gï¿½nï¿½re les enfants
                 children = Expand(node,problem);
                 // On ajoute l'enfant au bon endroit
                 for (int i = 0; i < children.Count; i++)
@@ -65,7 +65,7 @@ namespace UQAC_TP1_IA.core.functions
         }
 
         /// <summary>
-        /// Création d'un enfant en tenant compte de l'heuristique
+        /// Crï¿½ation d'un enfant en tenant compte de l'heuristique
         /// </summary>
         /// <returns></returns>
         public Node ChildNodeH(IProblem problem, Node parent, IAction action)
