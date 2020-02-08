@@ -44,6 +44,7 @@ namespace UQAC_TP1_IA.core
         private readonly Effector _effector;
         private readonly AgentFunction _function;
         public MentalState MentalState;
+        public int limit;
         
         
         protected Agent(Sensor sensor, Effector effector, AgentFunction agentFunction)
@@ -51,6 +52,7 @@ namespace UQAC_TP1_IA.core
             _sensor = sensor;
             _effector = effector;
             _function = agentFunction;
+            limit = 10;
         }
         
         /// <summary>

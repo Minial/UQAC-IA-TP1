@@ -105,6 +105,7 @@ namespace UQAC_TP1_IA.mansion
                 if (room.dirt) performanceMeasure.dirtPick++;
                 room.Reset();
             }
+            performanceMeasure.electricity++;
         }
 
         public void SetAgent(Agent agent, Position initialPosition)
@@ -157,10 +158,11 @@ namespace UQAC_TP1_IA.mansion
         public int dirtClean = 0;
         public int diamondClean = 0;
         public int dirtPick = 0;
+        public int electricity = 0;
 
         public int Score()
         {
-            return diamondPick + dirtClean - diamondClean*2 - dirtPick;
+            return diamondPick + dirtClean - diamondClean*2 - dirtPick - electricity;
         }
     }
 
@@ -258,7 +260,8 @@ namespace UQAC_TP1_IA.mansion
             Console.WriteLine("\tDiamond pick (+): {0}", _environment.performanceMeasure.diamondPick);
             Console.WriteLine("\tDirt pick (-): {0}", _environment.performanceMeasure.dirtPick);
             Console.WriteLine("\tDiamond clean (-): {0}", _environment.performanceMeasure.diamondClean);
-            
+            Console.WriteLine("\tElectricity (-): {0}", _environment.performanceMeasure.electricity);
+
             Console.WriteLine(string.Join(" ; ", _agent.MentalState.Intention.Select(a => a.ToString()).ToArray()));
             Console.WriteLine();
         }

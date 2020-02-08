@@ -15,8 +15,9 @@ namespace UQAC_TP1_IA
 
             var sensor = new Sensor(mansionEnv);
             var effector = new Effector(mansionEnv);
+            var agent = new MansionAgent(sensor, effector, new DepthLimitedSearch());
             //var agent = new MansionAgent(sensor, effector, new BreadthFirstSearch());
-            var agent = new MansionAgent(sensor, effector, new Astar());
+            //var agent = new MansionAgent(sensor, effector, new Astar());
             mansionEnv.SetAgent(agent, new Position(0, 0));
 
 
