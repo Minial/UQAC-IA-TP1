@@ -77,7 +77,24 @@ namespace UQAC_TP1_IA.mansion
             else if (action == MansionAction.CLEAN)
                 newPercept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Clean;
             else if (action == MansionAction.PICK)
-                newPercept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Clean; // en vrai pas forcement, peut content dirt
+            {
+                if (mansionState.Percept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State == RoomStateEnum.Diamond)
+                {
+                    newPercept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Clean;
+                }
+                if (mansionState.Percept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State == RoomStateEnum.Both)
+                {
+                    newPercept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Dirt;
+                }
+                if (mansionState.Percept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State == RoomStateEnum.Dirt)
+                {
+                    newPercept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Dirt;
+                }
+                if (mansionState.Percept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State == RoomStateEnum.Clean)
+                {
+                    newPercept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Clean;
+                }
+            }
             return new MansionState(newPercept);
         }
 
