@@ -93,5 +93,25 @@ namespace UQAC_TP1_IA.mansion
             return 1;
         }
 
+        /// <summary>
+        /// Méthode de calcul de l'heuristique : nombre de cases non vide sur le plateau
+        /// </summary>
+        /// <param name="state"> Etat courant</param>
+        /// <returns></returns>
+        public int Heuristique(IState state)
+        {
+            int h = 0;
+            List<RoomState> liste = new List<RoomState>();
+            liste = ((MansionState)state).Percept.rooms;
+            for (int i = 0; i < liste.Count; i++)
+            {
+                if (liste[i].State != RoomStateEnum.Clean)
+                {
+                    h++;
+                }
+            }
+            return h;
+        }
+
     }
 }

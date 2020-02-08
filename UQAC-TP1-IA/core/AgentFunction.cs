@@ -53,7 +53,7 @@ namespace UQAC_TP1_IA.core
         {
             var childState = problem.Successor(parent.State, action);
             var cost = problem.PathCost(parent.State, action, childState);
-            return new Node(parent, parent.Depth+1, cost, problem.Successor(parent.State, action), action);
+            return new Node(parent, parent.Depth+1, parent.Cost + cost, problem.Successor(parent.State, action), action);
         }
 
         /// <summary>
