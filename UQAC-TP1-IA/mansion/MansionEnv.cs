@@ -23,31 +23,15 @@ namespace UQAC_TP1_IA.mansion
     {
         public const int SIZE = 5;
 
-        public MansionAgent agent;
+        public List<Room> Rooms;
+        private MansionAgent _agent;
         public Position PositionAgent;
+        private MansionPerformanceMeasure _performanceMeasure;
 
-        public List<Room> rooms;
-        public MansionPerformanceMeasure performanceMeasure;
-
-
-        public MansionEnv(int size)
-        {
-            InitBoard();
-            rooms.ElementAt(1).dirt = true;
-            rooms.ElementAt(2).dirt = true;
-            // rooms.ElementAt(11).dirt = true;
-            // rooms.ElementAt(12).diamond = true;
-            // rooms.ElementAt(13).diamond = true;
-            // rooms.ElementAt(24).dirt = true;
-            // rooms.ElementAt(21).dirt = true;
-            // rooms.ElementAt(17).dirt = true;
-            // rooms.ElementAt(6).dirt = true;
-
-        }
-
-
+        
         public void Run()
         {
+            InitBoard();
             while (true)
             {
                 SporadicObjectGeneration();
@@ -62,7 +46,7 @@ namespace UQAC_TP1_IA.mansion
         [MethodImpl(MethodImplOptions.Synchronized)]
         public IPercept Observe() {
             var roomStates = new List<RoomState>();
-            foreach (var room in rooms)
+            foreach (var room in Rooms)
             {
                 if (room.dirt && room.diamond) 
                     roomStates.Add(new RoomState(RoomStateEnum.Both, room.pos.Copy()));
@@ -93,36 +77,40 @@ namespace UQAC_TP1_IA.mansion
                 positionAgent.y++;
             else if (action == MansionAction.CLEAN)
             {
-                var room = rooms.ElementAt(positionAgent.x + positionAgent.y * SIZE);
-                if (room.diamond) performanceMeasure.diamondClean++;
-                if (room.dirt) performanceMeasure.dirtClean++;
+                var room = Rooms.ElementAt(positionAgent.x + positionAgent.y * SIZE);
+                if (room.diamond) _performanceMeasure.DiamondClean++;
+                if (room.dirt) _performanceMeasure.DirtClean++;
                 room.Reset();
             }
             else if (action == MansionAction.PICK)
             {
-                var room = rooms.ElementAt(positionAgent.ToIndex(SIZE));
-                if (room.diamond) performanceMeasure.diamondPick++;
-                if (room.dirt) performanceMeasure.dirtPick++;
-                room.Reset();
+                var room = Rooms.ElementAt(positionAgent.ToIndex(SIZE));
+                if (room.diamond) _performanceMeasure.DiamondPick++;
+                room.diamond = false;
             }
-            performanceMeasure.electricity++;
+            _performanceMeasure.Electricity++;
         }
+
+        public int PerformanceMeasure(Agent _) => _performanceMeasure.Score();
+
+        public MansionPerformanceMeasure PerformancMeasureDetails() => _performanceMeasure;
+        
 
         public void SetAgent(Agent agent, Position initialPosition)
         {
-            this.agent = (MansionAgent) agent;
+            _agent = (MansionAgent) agent;
             PositionAgent = initialPosition;
-            performanceMeasure = new MansionPerformanceMeasure();
+            _performanceMeasure = new MansionPerformanceMeasure();
         }
         
         private void InitBoard()
         {
-            rooms = new List<Room>();
+            Rooms = new List<Room>();
             for (var i = 0; i < SIZE; i++)
             {
                 for (var j = 0; j < SIZE; j++)
                 {
-                    rooms.Add(new Room(new Position(j, i)));
+                    Rooms.Add(new Room(new Position(j, i)));
                 }
             }
         }
@@ -140,13 +128,9 @@ namespace UQAC_TP1_IA.mansion
             var roomNumber = random.Next(0,SIZE*SIZE);
 
             if (randomVal < 0.30)
-            {
-                rooms.ElementAt(roomNumber).dirt = true;
-            }
-            else if (randomVal >= 0.30 && randomVal < 0.40)
-            {
-                rooms.ElementAt(roomNumber).diamond = true;
-            }
+                Rooms.ElementAt(roomNumber).dirt = true;
+            else if (randomVal >= 0.30 && randomVal < 0.50)
+                Rooms.ElementAt(roomNumber).diamond = true;
         }
     }
     
@@ -154,15 +138,26 @@ namespace UQAC_TP1_IA.mansion
 
     public class MansionPerformanceMeasure
     {
-        public int diamondPick = 0;
-        public int dirtClean = 0;
-        public int diamondClean = 0;
-        public int dirtPick = 0;
-        public int electricity = 0;
+        public int DiamondPick;
+        public int DirtClean;
+        public int DiamondClean;
+        public int Electricity;
+        public int DirtPick;
 
         public int Score()
         {
-            return diamondPick + dirtClean - diamondClean*2 - dirtPick - electricity;
+            return DiamondPick + DirtClean - DiamondClean*2 - Electricity;
+        }
+
+        public override string ToString()
+        {
+            var toString = "Score:" + Score();
+            toString += "\n\tDirt clean (+) : " + DirtClean;
+            toString += "\n\tDiamond pick (+) : " + DiamondPick;
+            toString += "\n\tDiamond clean (-) : " + DiamondClean;
+            toString += "\n\tDirt pick (-) : " + DirtPick;
+            toString += "\n\tElectricity (-) : " + Electricity;
+            return toString;
         }
     }
 
@@ -213,57 +208,5 @@ namespace UQAC_TP1_IA.mansion
         public bool Equals(Position otherPosition) => x == otherPosition.x && y == otherPosition.y;
 
         public int ToIndex(int gridWidth) => x + y * gridWidth;
-    }
-
-    internal class MansionConsoleRender
-    {
-        private readonly MansionEnv _environment;
-        private readonly MansionAgent _agent;
-
-        public MansionConsoleRender(MansionEnv environment, MansionAgent agent)
-        {
-            _environment = environment;
-            _agent = agent;
-        }
-
-
-        public void Process()
-        {
-            while (true)
-            {
-                Draw();
-                Thread.Sleep(500);
-            }
-        }
-
-        private void Draw()
-        {
-            Console.Clear();
-
-            // Dessin du plateau
-            var i = 0;
-            foreach (var room in _environment.rooms)
-            {
-                if (i % MansionEnv.SIZE == 0)
-                {
-                    Console.WriteLine();
-                    Console.WriteLine(new string('-', MansionEnv.SIZE * 6));
-                }
-                Console.Write(" {0}{1}{2} |", room.dirt ? "P" : " ", room.diamond ? "D" : " ", room.pos.Equals(_environment.PositionAgent) ? "A" : " ");
-                i++;
-            }
-
-            // Dessin du HUD
-            Console.WriteLine();
-            Console.WriteLine("Score: {0}", _environment.performanceMeasure.Score());
-            Console.WriteLine("\tDirt clean (+): {0}", _environment.performanceMeasure.dirtClean);
-            Console.WriteLine("\tDiamond pick (+): {0}", _environment.performanceMeasure.diamondPick);
-            Console.WriteLine("\tDirt pick (-): {0}", _environment.performanceMeasure.dirtPick);
-            Console.WriteLine("\tDiamond clean (-): {0}", _environment.performanceMeasure.diamondClean);
-            Console.WriteLine("\tElectricity (-): {0}", _environment.performanceMeasure.electricity);
-
-            Console.WriteLine(string.Join(" ; ", _agent.MentalState.Intention.Select(a => a.ToString()).ToArray()));
-            Console.WriteLine();
-        }
     }
 }

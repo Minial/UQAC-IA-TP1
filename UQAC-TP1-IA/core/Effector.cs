@@ -1,5 +1,3 @@
-
-
 namespace UQAC_TP1_IA.core
 {
     /// <summary>
@@ -19,9 +17,12 @@ namespace UQAC_TP1_IA.core
         {
             _env = env;
         }
-
-        public void DoAction(IAction action) {
-            _env.Action(action, null);
+        
+        /// <summary>
+        /// Permet à l'agent d'effectuer une action sur l'environnement, on passe l'agent pour les environnement multi-agents
+        /// </summary>
+        public void DoAction(Agent agent, IAction action) {
+            _env.Action(action, agent);
         }
 
     }

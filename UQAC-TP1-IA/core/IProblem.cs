@@ -64,6 +64,9 @@ namespace UQAC_TP1_IA.core
         /// </summary>
         public int PathCost(IState initialState, IAction action, IState reachState);
 
+        /// <summary>
+        /// @return int : la mesure d'heuristique d'un état
+        /// </summary>
         public int Heuristique(IState state);
     }
 }

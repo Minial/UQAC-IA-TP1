@@ -6,11 +6,13 @@ using UQAC_TP1_IA.core;
 namespace UQAC_TP1_IA.mansion
 {
     /// <summary>
-    /// Classe permettant de gérer les différents états à partir des perceptions
-    /// Champs :
-    ///     - état : décrit l'état
-    /// Méthodes :
-    ///     - Equals() : savoir si deux états sont les mêmes ou pas
+    /// Représente l'état du manoir, contient uniquement une perception de celui-ci et une fonction permettant de savoir
+    /// si le manoir est propre dans cet état là
+    ///
+    /// Il y a également l'implémentation de la fonction Equals pour comparer deux états.
+    /// 
+    /// Note : dans notre implémentation deux états avec deux positions d'agent différents NE sont PAS égaux (car
+    /// les fonction d'exploration doivent considérer ces deux états comme effectivement différents)
     /// </summary>
     public class MansionState : IState 
     {
@@ -20,18 +22,18 @@ namespace UQAC_TP1_IA.mansion
         {
             Percept = percept;
         }
-
-        public bool IsClean()
-        {
-            return Percept.rooms.All(room => room.State == RoomStateEnum.Clean);
-        }
+        
+        /// <summary>
+        /// Permet de savoir si l'état est propre (aucune poussière et aucun diamant)
+        /// </summary>
+        public bool IsClean() => Percept.Rooms.All(room => room.State == RoomStateEnum.Clean);
+        
 
         /// <summary>
+        /// Permet de savoir si deux états sont égaux ou non
         ///
-        /// Plutôt dégueulasse !
+        /// TODO: La fonction n'est pas très propre, on pourrait la remanier je pense
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (!(obj is MansionState))
@@ -52,15 +54,11 @@ namespace UQAC_TP1_IA.mansion
 
             var thisDirtyRooms = new List<RoomState>();
             if (Percept != null)
-            {
-                thisDirtyRooms = Percept.rooms.Where(StateCleanPredicate).ToList();
-            }
-            
+                thisDirtyRooms = Percept.Rooms.Where(StateCleanPredicate).ToList();
+
             var otherDirtyRooms = new List<RoomState>();
             if (otherStateMansion.Percept != null)
-            {
-                otherDirtyRooms = otherStateMansion.Percept.rooms.Where(StateCleanPredicate).ToList();
-            }
+                otherDirtyRooms = otherStateMansion.Percept.Rooms.Where(StateCleanPredicate).ToList();
             
             return otherDirtyRooms.SequenceEqual(thisDirtyRooms);
         }

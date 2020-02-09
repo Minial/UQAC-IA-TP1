@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UQAC_TP1_IA.core;
@@ -7,37 +6,33 @@ using UQAC_TP1_IA.core;
 namespace UQAC_TP1_IA.mansion
 {
     /// <summary>
-    /// Classe permettant de gérer le capteur du robot
-    /// Champs :
-    ///     - _initialState et but : états correspondant à l'état initial et a l'état que l'on souhaite atteindre
-    /// Méthodes :
-    ///     - TestBut() : tester si on a atteint le but
+    /// <inheritdoc cref="IProblem"/>
+    /// Implémentation de [IProblem] pour le problème du manoir. Voir [IProblem] pour plus de détails sur son utilité,
+    /// la description de ses fonctions, etc.
     /// </summary>
     public class MansionProblem : IProblem 
     {
-
         private readonly MansionState _initialState;
-        private readonly MansionState _desire;
         
-        public MansionProblem(MansionState initialState, MansionState desire)
+        public MansionProblem(MansionState initialState)
         {
             _initialState = initialState;
-            _desire = desire;
         }
+
+        /// <summary>
+        /// <inheritdoc cref="IProblem.InitialState"/>
+        /// </summary>
+        public IState InitialState() => _initialState;
+
         
-
-        public IState InitialState()
-        {
-            return _initialState;
-        }
-
-
+        /// <summary>
+        /// <inheritdoc cref="IProblem.Actions"/>
+        /// On calcule toutes les actions possibles en fonction de la position de l'agent dans l'état [state]
+        /// </summary>
         public List<IAction> Actions(IState state)
         {
             var mansionState = (MansionState) state;
-            var actions = new List<IAction>();
-            actions.Add(MansionAction.PICK); // l'ordre important je pense ??
-            actions.Add(MansionAction.CLEAN);
+            var actions = new List<IAction> {MansionAction.PICK, MansionAction.CLEAN};
             if (mansionState.Percept.PositionAgent.x > 0) 
                 actions.Add(MansionAction.LEFT);
             if (mansionState.Percept.PositionAgent.x < MansionEnv.SIZE-1) 
@@ -49,19 +44,22 @@ namespace UQAC_TP1_IA.mansion
             return actions;
         }
 
-
+        /// <summary>
+        /// <inheritdoc cref="IProblem.Successors"/>
+        /// On retourne tous les états correspondant à toutes les actions possibles
+        /// </summary>
         public Dictionary<IAction, IState> Successors(IState state)
         {
             var possibleActions = Actions(state);
             var successors = new Dictionary<IAction, IState>();
             foreach (var action in possibleActions)
-            {
                 successors[action] = Successor(state, action);
-            }
             return successors;
         }
     
-
+        /// <summary>
+        /// <inheritdoc cref="IProblem.Successor"/>
+        /// </summary>
         public IState Successor(IState state, IAction action)
         {
             var mansionState = (MansionState) state;
@@ -75,57 +73,47 @@ namespace UQAC_TP1_IA.mansion
             else if (action == MansionAction.RIGHT)
                 newPercept.PositionAgent.x++;
             else if (action == MansionAction.CLEAN)
-                newPercept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Clean;
+                newPercept.Rooms[mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)].State = RoomStateEnum.Clean;
             else if (action == MansionAction.PICK)
             {
-                if (mansionState.Percept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State == RoomStateEnum.Diamond)
-                {
-                    newPercept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Clean;
-                }
-                if (mansionState.Percept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State == RoomStateEnum.Both)
-                {
-                    newPercept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Dirt;
-                }
-                if (mansionState.Percept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State == RoomStateEnum.Dirt)
-                {
-                    newPercept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Dirt;
-                }
-                if (mansionState.Percept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State == RoomStateEnum.Clean)
-                {
-                    newPercept.rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Clean;
-                }
+                var currentRoomState = mansionState.Percept.Rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State;
+                if (currentRoomState == RoomStateEnum.Both)
+                    newPercept.Rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Dirt;
+                else if (currentRoomState == RoomStateEnum.Diamond)
+                    newPercept.Rooms.ElementAt(mansionState.Percept.PositionAgent.ToIndex(MansionEnv.SIZE)).State = RoomStateEnum.Clean;
             }
             return new MansionState(newPercept);
         }
 
+        /// <summary>
+        /// <inheritdoc cref="IProblem.GoalTest"/>
+        /// Note: on n'utilise pas l'état mental de l'agent, puisque dans notre implémentation, deux états avec la position
+        /// de l'agent différent seront considérés comme différents (utiles pour les fonctions d'explorations)
+        /// </summary>
+        public bool GoalTest(IState state) => ((MansionState) state).IsClean();
+        
+        /// <summary>
+        /// <inheritdoc cref="IProblem.PathCost"/>
+        /// Dans notre cas, retourne toujours 1
+        /// </summary>
+        public int PathCost(IState initialState, IAction action, IState reachState) => 1;
 
-        public bool GoalTest(IState state)
-        {
-            return ((MansionState) state).IsClean(); 
-        }
-
-
-        public int PathCost(IState initialState, IAction action, IState reachState)
-        {
-            return 1;
-        }
 
         /// <summary>
+        /// <inheritdoc cref="IProblem.Heuristique"/>
         /// Méthode de calcul de l'heuristique : nombre de cases non vide sur le plateau
+        /// @param state : état courant
+        /// @return la valeur de l'heuristique pour cette pièce
         /// </summary>
-        /// <param name="state"> Etat courant</param>
-        /// <returns></returns>
         public int Heuristique(IState state)
         {
-            int h = 0;
-            List<RoomState> liste = new List<RoomState>();
-            liste = ((MansionState)state).Percept.rooms;
-            for (int i = 0; i < liste.Count; i++)
+            var h = 0;
+            var liste = new List<RoomState>();
+            liste = ((MansionState)state).Percept.Rooms;
+            for (var i = 0; i < liste.Count; i++)
             {
                 if (liste[i].State != RoomStateEnum.Clean)
-                {
                     h++;
-                }
             }
             return h;
         }

@@ -1,23 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using UQAC_TP1_IA.core;
 using UQAC_TP1_IA.core.functions;
 using UQAC_TP1_IA.mansion;
 
+
 namespace UQAC_TP1_IA
-{
+{    
+    /// <summary>
+    /// Classes tests pour créer l'environnement et l'agent, démarrer leurs processus dans des thread.
+    /// C'est ici qu'on donne la fonction d'exploration souhaitée à l'agent.
+    ///
+    /// On démarre aussi un 3ème thread pour le rendu
+    /// </summary>
     internal static class Application
     {
         private static void Main(string[] args)
         {
-            var mansionEnv = new MansionEnv(5);
-
-            var sensor = new Sensor(mansionEnv);
-            var effector = new Effector(mansionEnv);
-            var agent = new MansionAgent(sensor, effector, new DepthLimitedSearch());
-            //var agent = new MansionAgent(sensor, effector, new BreadthFirstSearch());
-            //var agent = new MansionAgent(sensor, effector, new Astar());
+            var mansionEnv = new MansionEnv();
+            var agent = new MansionAgent(new Sensor(mansionEnv), new Effector(mansionEnv), new Astar());
             mansionEnv.SetAgent(agent, new Position(0, 0));
 
 

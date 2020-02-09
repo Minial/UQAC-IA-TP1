@@ -43,16 +43,18 @@ namespace UQAC_TP1_IA.core
         private readonly Sensor _sensor;
         private readonly Effector _effector;
         private readonly AgentFunction _function;
-        public MentalState MentalState;
-        public int limit;
+        protected MentalState MentalState;
         
+        protected int Limit;
+        protected int CurrentPerfMeasure;
+        protected int CurrentDelta;
         
         protected Agent(Sensor sensor, Effector effector, AgentFunction agentFunction)
         {
             _sensor = sensor;
             _effector = effector;
             _function = agentFunction;
-            limit = 10;
+            Limit = 10;
         }
         
         /// <summary>
@@ -69,9 +71,10 @@ namespace UQAC_TP1_IA.core
             {
                 Thread.Sleep(500);
                 var percept = _sensor.Observe();
+                LearnAndUpdate(_sensor.PerformanceMeasure(this));
                 var action = SimpleProblemSolvingAgent(percept);
                 if (action != null)
-                    _effector.DoAction(action);
+                    _effector.DoAction(this, action);
             }
         }
 
@@ -93,10 +96,10 @@ namespace UQAC_TP1_IA.core
             {
                 MentalState.Desire = FormulateGoal(MentalState.Belief);
                 var problem = FormulateProblem(MentalState.Belief, MentalState.Desire);
-                MentalState.Intention = _function.Search(problem);
+                MentalState.Intention = _function.Search(problem)??new List<IAction>();
             }
 
-            if (MentalState.Intention != null && MentalState.Intention.Any())
+            if (MentalState.Intention.Any())
             {
                 var action = MentalState.Intention.First();
                 MentalState.Intention.RemoveAt(0);
@@ -126,7 +129,19 @@ namespace UQAC_TP1_IA.core
         /// @return IProblem : le problème à résoudre
         /// </summary>
         protected abstract IProblem FormulateProblem(IState state, IState goal);
-        
-        
+
+
+        private void LearnAndUpdate(int newPerfMeasure)
+        {
+            if (CurrentPerfMeasure - newPerfMeasure < CurrentDelta)  // si la performance se degrade
+            {
+                Limit = Limit > 1 ? Limit - 1 : Limit;
+                MentalState.Intention = new List<IAction>();
+            }
+            CurrentDelta = CurrentPerfMeasure - newPerfMeasure;
+            CurrentPerfMeasure = newPerfMeasure;
+            if (MentalState.Intention.Count > Limit)
+                MentalState.Intention.GetRange(0, Limit);
+        }
     }
 }

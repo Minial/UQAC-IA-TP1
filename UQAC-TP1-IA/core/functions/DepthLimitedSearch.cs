@@ -16,11 +16,10 @@ namespace UQAC_TP1_IA.core.functions
 
         public List<IAction> IterativeDeepeningSearch(IProblem problem)
         {
-            int depthLimit = 999;//max depth to avoid infinite loop
-            var explored = new List<IState>();
-            for (int depth = 0; depth < depthLimit; depth++)
+            var depthLimit = 999;//max depth to avoid infinite loop
+            for (var depth = 0; depth < depthLimit; depth++)
             {
-                List<IAction> result = DepthLimitedSearchF(problem, depth);
+                var result = DepthLimitedSearchF(problem, depth);
                 if (result != null)
                 {
                     return result;
@@ -29,14 +28,14 @@ namespace UQAC_TP1_IA.core.functions
             return null;
         }
 
-        public List<IAction> DepthLimitedSearchF(IProblem problem, int limit)
+        private List<IAction> DepthLimitedSearchF(IProblem problem, int limit)
         {
             return RecursiveDLS(new Node(null, 0, 0, problem.InitialState(), null), problem, limit);
         }
 
-        public List<IAction> RecursiveDLS(Node node, IProblem problem, int limit)
+        private List<IAction> RecursiveDLS(Node node, IProblem problem, int limit)
         {
-            Boolean cutoffOccurred = false;
+            var cutoffOccurred = false;
             if (problem.GoalTest(node.State))
             {
                 Console.WriteLine("solution");
@@ -52,8 +51,8 @@ namespace UQAC_TP1_IA.core.functions
                 //Console.WriteLine("recherche en profondeur");
                 foreach (var action in problem.Actions(node.State))
                 {
-                    Node successor = ChildNode(problem, node, action);
-                    List<IAction> result = RecursiveDLS(successor, problem, limit);
+                    var successor = ChildNode(problem, node, action);
+                    var result = RecursiveDLS(successor, problem, limit);
                     if (result == null)
                     {
                         cutoffOccurred = true;
@@ -63,10 +62,8 @@ namespace UQAC_TP1_IA.core.functions
                         return result;
                     }
                 }
-
             }
             return null;
-
         }
 
         /// <summary>

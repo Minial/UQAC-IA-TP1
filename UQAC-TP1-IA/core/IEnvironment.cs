@@ -5,8 +5,9 @@ namespace UQAC_TP1_IA.core
     /// <summary>
     /// Représente un environnement
     ///
-    /// Deux opérations possibles :
+    /// Trois opérations possibles :
     /// - récupérer le perception de l'envrironnement actuelle avec Observe()
+    /// - récupérer la mesure de performance de l'agent
     /// - intéragir sur l'environnment en faisant une ation avec Action(IAction, Agent)
     ///
     /// Note: l'implémentation des fonction dépend des caractéristiques de l'environnement (complétement observable ou
@@ -27,7 +28,14 @@ namespace UQAC_TP1_IA.core
 
         /// <summary>
         /// @param action : effectue une action par l'agent actuel dans l'environnement
+        /// @param agent : l'agent qui effectue l'action (pour gérer les environnements multi-agents)
         /// </summary>
         public void Action(IAction action, Agent agent);
+
+        /// <summary>
+        /// @param agent : l'agent qui demande sa performance (pour gérer les environnements multi-agents)
+        /// @return int : la performance de l'agent
+        /// </summary>
+        public int PerformanceMeasure(Agent agent);
     }
 }

@@ -5,7 +5,11 @@ namespace UQAC_TP1_IA.mansion
 {
     
     /// <summary>
+    /// <inheritdoc cref="IAction"/>
+    /// 
     /// Classe contenant la liste des actions possible de l'agent aspirateur
+    ///
+    /// Voir document [IAction] pour plus d'informations
     /// </summary>
     public class MansionAction : IAction
     {

@@ -45,12 +45,12 @@ namespace UQAC_TP1_IA.core.functions
                 // On g�n�re les enfants
                 children = Expand(node,problem);
                 // On ajoute l'enfant au bon endroit
-                for (int i = 0; i < children.Count; i++)
+                for (var i = 0; i < children.Count; i++)
                 {
                     if (!explored.Contains(children[i].State))
                     {
                         frontier.Add(children[i]);
-                        for (int j = frontier.Count - 1; j > 0; j--)
+                        for (var j = frontier.Count - 1; j > 0; j--)
                         {
                             if (frontier[j].Cost < frontier[j - 1].Cost)
                             {
