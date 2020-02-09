@@ -26,6 +26,39 @@ namespace UQAC_TP1_IA.core
     }
     
     /// <summary>
+    /// Composant d'apprentissage pour un agent intelligent
+    ///
+    /// Le composant permet de modifier la taille maximale du plan d'action en fonction de l'évolution de la mesure de
+    /// performance de l'agent
+    /// </summary>
+    public class PerformanceUnit()
+    {
+        private Agent _agent;
+        
+        public int Limit;
+        public int CurrentPerfMeasure;
+        public int CurrentDelta;
+
+        public PerformanceUnit(Agent agent)
+        {
+            _agent = agent;
+        }
+        
+        public void Update(int newPerfMeasure)
+        {
+            if (CurrentPerfMeasure - newPerfMeasure < CurrentDelta)  // si la performance se degrade
+            {
+                Limit = Limit > 1 ? Limit - 1 : Limit;
+                _agent.MentalState.Intention = new List<IAction>();
+            }
+            CurrentDelta = CurrentPerfMeasure - newPerfMeasure;
+            CurrentPerfMeasure = newPerfMeasure;
+            if (_agent.MentalState.Intention.Count > Limit)
+                _agent.MentalState.Intention.GetRange(0, Limit);
+        }
+    }
+    
+    /// <summary>
     /// Agent intelligent, plus particulièrement un agent basé sur les buts
     ///
     /// Donc contient l'état actuel de l'environnement  et le but à atteindre (stocké dans son état mental [BDI]
@@ -43,18 +76,18 @@ namespace UQAC_TP1_IA.core
         private readonly Sensor _sensor;
         private readonly Effector _effector;
         private readonly AgentFunction _function;
-        protected MentalState MentalState;
         
-        protected int Limit;
-        protected int CurrentPerfMeasure;
-        protected int CurrentDelta;
+        public MentalState MentalState;
+        protected PerformanceUnit PerformanceUnit;
+        
+
         
         protected Agent(Sensor sensor, Effector effector, AgentFunction agentFunction)
         {
             _sensor = sensor;
             _effector = effector;
             _function = agentFunction;
-            Limit = 10;
+            PerformanceUnit = new PerformanceUnit(this);
         }
         
         /// <summary>
@@ -71,7 +104,7 @@ namespace UQAC_TP1_IA.core
             {
                 Thread.Sleep(500);
                 var percept = _sensor.Observe();
-                LearnAndUpdate(_sensor.PerformanceMeasure(this));
+                PerformanceUnit.Update(_sensor.PerformanceMeasure(this));
                 var action = SimpleProblemSolvingAgent(percept);
                 if (action != null)
                     _effector.DoAction(this, action);
@@ -107,7 +140,10 @@ namespace UQAC_TP1_IA.core
             }
             return null;
         }
-
+        
+        /// <summary>
+        /// Permet de savoir si l'agent est encore en vie ou non
+        /// </summary>
         protected abstract bool ImAlive();
 
         /// <summary>
@@ -129,19 +165,5 @@ namespace UQAC_TP1_IA.core
         /// @return IProblem : le problème à résoudre
         /// </summary>
         protected abstract IProblem FormulateProblem(IState state, IState goal);
-
-
-        private void LearnAndUpdate(int newPerfMeasure)
-        {
-            if (CurrentPerfMeasure - newPerfMeasure < CurrentDelta)  // si la performance se degrade
-            {
-                Limit = Limit > 1 ? Limit - 1 : Limit;
-                MentalState.Intention = new List<IAction>();
-            }
-            CurrentDelta = CurrentPerfMeasure - newPerfMeasure;
-            CurrentPerfMeasure = newPerfMeasure;
-            if (MentalState.Intention.Count > Limit)
-                MentalState.Intention.GetRange(0, Limit);
-        }
     }
 }

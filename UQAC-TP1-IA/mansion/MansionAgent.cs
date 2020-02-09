@@ -47,7 +47,7 @@ namespace UQAC_TP1_IA.mansion
 
         public override string ToString()
         {
-            var toString = "Limite du plan d'action : " + Limit + "\n";
+            var toString = "Limite du plan d'action : " + PerformanceUnit.Limit + "\n";
             toString += string.Join(" ; ", MentalState.Intention.Select(a => a.ToString()).ToArray());
             return toString;
         }
