@@ -28,10 +28,13 @@ namespace UQAC_TP1_IA.mansion
         public Position PositionAgent;
         private MansionPerformanceMeasure _performanceMeasure;
 
+        public MansionEnv()
+        {
+            InitBoard();;
+        }
         
         public void Run()
         {
-            InitBoard();
             while (true)
             {
                 SporadicObjectGeneration();
@@ -57,7 +60,7 @@ namespace UQAC_TP1_IA.mansion
                 else 
                     roomStates.Add(new RoomState(RoomStateEnum.Dirt, room.pos.Copy()));
             }
-            return new MansionPercept(PositionAgent.Copy(), roomStates);
+            return new MansionPercept(PositionAgent?.Copy(), roomStates);
         }
 
         /// <summary>

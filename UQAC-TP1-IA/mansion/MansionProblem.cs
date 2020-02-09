@@ -13,10 +13,12 @@ namespace UQAC_TP1_IA.mansion
     public class MansionProblem : IProblem 
     {
         private readonly MansionState _initialState;
+        private readonly MansionState _desire;
         
-        public MansionProblem(MansionState initialState)
+        public MansionProblem(MansionState initialState, MansionState desire)
         {
             _initialState = initialState;
+            _desire = desire;
         }
 
         /// <summary>
@@ -87,10 +89,10 @@ namespace UQAC_TP1_IA.mansion
 
         /// <summary>
         /// <inheritdoc cref="IProblem.GoalTest"/>
-        /// Note: on n'utilise pas l'état mental de l'agent, puisque dans notre implémentation, deux états avec la position
-        /// de l'agent différent seront considérés comme différents (utiles pour les fonctions d'explorations)
+        /// Compare l'état avec l'état objectif (l'état objectif contient une position d'agent égal à null, donc
+        /// est "équivalent" au 25 états possibles propres)
         /// </summary>
-        public bool GoalTest(IState state) => ((MansionState) state).IsClean();
+        public bool GoalTest(IState state) => _desire.Equals(state);
         
         /// <summary>
         /// <inheritdoc cref="IProblem.PathCost"/>

@@ -18,9 +18,8 @@ namespace UQAC_TP1_IA.core
         public IState Desire;
         public List<IAction> Intention;
         
-        public MentalState(IState initialBelief)
+        public MentalState()
         {
-            Belief = initialBelief;
             Intention = new List<IAction>();
         }
     }
@@ -89,6 +88,7 @@ namespace UQAC_TP1_IA.core
             _effector = effector;
             _function = agentFunction;
             PerformanceUnit = new PerformanceUnit(this);
+            MentalState = new MentalState();
         }
         
         /// <summary>
@@ -99,7 +99,7 @@ namespace UQAC_TP1_IA.core
         /// </summary>
         public void Run(IState initialState)
         {
-            MentalState = new MentalState(initialState);
+            MentalState.Belief = initialState;
 
             while (ImAlive())
             {

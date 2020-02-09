@@ -16,7 +16,10 @@ namespace UQAC_TP1_IA.mansion
     /// </summary>
     public class MansionAgent : Agent
     {
-        public MansionAgent(Sensor sensor, Effector effector, AgentFunction agentFunction) : base(sensor, effector, agentFunction) { }
+        public MansionAgent(Sensor sensor, Effector effector, AgentFunction agentFunction, MansionState desire) : base(sensor, effector, agentFunction)
+        {
+            MentalState.Desire = desire;
+        }
         
         /// <summary>
         /// <inheritdoc cref="Agent.ImAlive"/>
@@ -34,7 +37,7 @@ namespace UQAC_TP1_IA.mansion
         /// <inheritdoc cref="Agent.FormulateGoal"/>
         /// On retourne toujours un état vide (le but ne change jamais en fonction de l'état courant ici)
         /// </summary>
-        protected override IState FormulateGoal(IState state) =>  new MansionState();
+        protected override IState FormulateGoal(IState state) =>  MentalState.Desire;
         
         /// <summary>
         /// <inheritdoc cref="Agent.FormulateProblem"/>
@@ -43,7 +46,7 @@ namespace UQAC_TP1_IA.mansion
         /// buts avec deux positions d'agent différents seront différents (utile pour les fonctions d'explorations), donc
         /// on utilise directement la fonction [MansionState.IsClean() : bool]
         /// </summary>
-        protected override IProblem FormulateProblem(IState state, IState goal) => new MansionProblem((MansionState) state);
+        protected override IProblem FormulateProblem(IState state, IState goal) => new MansionProblem((MansionState) state, (MansionState) MentalState.Desire);
 
         public override string ToString()
         {

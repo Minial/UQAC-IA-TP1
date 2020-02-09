@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using UQAC_TP1_IA.core;
 using UQAC_TP1_IA.core.functions;
 using UQAC_TP1_IA.mansion;
@@ -17,7 +18,8 @@ namespace UQAC_TP1_IA
         private static void Main(string[] args)
         {
             var mansionEnv = new MansionEnv();
-            var agent = new MansionAgent(new Sensor(mansionEnv), new Effector(mansionEnv), new Astar());
+            var agentGoal = (MansionPercept) mansionEnv.Observe();
+            var agent = new MansionAgent(new Sensor(mansionEnv), new Effector(mansionEnv), new DepthLimitedSearch(), new MansionState(agentGoal));
             mansionEnv.SetAgent(agent, new Position(0, 0));
 
 

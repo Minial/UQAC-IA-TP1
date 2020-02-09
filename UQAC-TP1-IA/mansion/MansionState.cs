@@ -6,27 +6,23 @@ using UQAC_TP1_IA.core;
 namespace UQAC_TP1_IA.mansion
 {
     /// <summary>
-    /// Représente l'état du manoir, contient uniquement une perception de celui-ci et une fonction permettant de savoir
-    /// si le manoir est propre dans cet état là
+    /// Représente l'état du manoir, contient uniquement une perception de celui-ci.
     ///
     /// Il y a également l'implémentation de la fonction Equals pour comparer deux états.
     /// 
-    /// Note : dans notre implémentation deux états avec deux positions d'agent différents NE sont PAS égaux (car
+    /// Dans notre implémentation deux états avec deux positions d'agent différents NE sont PAS égaux (car
     /// les fonction d'exploration doivent considérer ces deux états comme effectivement différents)
+    /// Cependant si un état possède un position d'agent null, il peut être égal à un autre état avec  un position
+    /// d'agent non null (à condition que l'état des pièces soit identique)
     /// </summary>
     public class MansionState : IState 
     {
         public readonly MansionPercept Percept;
         
-        public MansionState(MansionPercept percept = null)
+        public MansionState(MansionPercept percept)
         {
             Percept = percept;
         }
-        
-        /// <summary>
-        /// Permet de savoir si l'état est propre (aucune poussière et aucun diamant)
-        /// </summary>
-        public bool IsClean() => Percept.Rooms.All(room => room.State == RoomStateEnum.Clean);
         
 
         /// <summary>
@@ -42,12 +38,9 @@ namespace UQAC_TP1_IA.mansion
             var otherStateMansion = (MansionState) obj;
             if (otherStateMansion.Percept == null ^ Percept == null)
                 return false;
-            if (otherStateMansion.Percept == null && Percept == null)
-                return true;
-            if (otherStateMansion.Percept.PositionAgent == null ^ Percept.PositionAgent == null)
-                return false;
-            
-            if (otherStateMansion.Percept.PositionAgent != null && !otherStateMansion.Percept.PositionAgent.Equals(Percept.PositionAgent))
+            if (otherStateMansion.Percept.PositionAgent != null 
+                && Percept.PositionAgent != null 
+                && !otherStateMansion.Percept.PositionAgent.Equals(Percept.PositionAgent))
                 return false;
 
             static bool StateCleanPredicate(RoomState room) => room.State == RoomStateEnum.Clean;
