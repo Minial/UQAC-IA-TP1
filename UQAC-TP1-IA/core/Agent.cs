@@ -31,7 +31,7 @@ namespace UQAC_TP1_IA.core
     /// Le composant permet de modifier la taille maximale du plan d'action en fonction de l'évolution de la mesure de
     /// performance de l'agent
     /// </summary>
-    public class PerformanceUnit()
+    public class PerformanceUnit
     {
         private Agent _agent;
         
@@ -42,6 +42,7 @@ namespace UQAC_TP1_IA.core
         public PerformanceUnit(Agent agent)
         {
             _agent = agent;
+            Limit = 10;
         }
         
         public void Update(int newPerfMeasure)

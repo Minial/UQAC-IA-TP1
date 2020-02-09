@@ -68,7 +68,7 @@ namespace UQAC_TP1_IA.core.functions
         /// Cr�ation d'un enfant en tenant compte de l'heuristique
         /// </summary>
         /// <returns></returns>
-        public Node ChildNodeH(IProblem problem, Node parent, IAction action)
+        protected override Node ChildNode(IProblem problem, Node parent, IAction action)
         {
             var childState = problem.Successor(parent.State, action);
             var cost = problem.PathCost(parent.State, action, childState);
