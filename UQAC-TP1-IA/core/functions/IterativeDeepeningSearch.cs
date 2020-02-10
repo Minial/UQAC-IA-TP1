@@ -11,11 +11,6 @@ namespace UQAC_TP1_IA.core.functions
         /// </summary>
         public override List<IAction> Search(IProblem problem)
         {
-            return IterativeDeepeningSearch(problem);
-        }
-
-        public List<IAction> IterativeDeepeningSearch(IProblem problem)
-        {
             var depthLimit = 999;//max depth to avoid infinite loop
             for (var depth = 0; depth < depthLimit; depth++)
             {
