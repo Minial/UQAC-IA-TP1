@@ -22,6 +22,7 @@ namespace UQAC_TP1_IA.core
     public interface IEnvironment
     {
         /// <summary>
+        /// TODO: Rajouter l'agent en paramètre pour les environnement multi-agents non complétement observable
         /// @return IPercept : le perception actuelle de l'environnement
         /// </summary>
         public IPercept Observe();

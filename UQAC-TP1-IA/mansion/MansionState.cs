@@ -6,6 +6,7 @@ using UQAC_TP1_IA.core;
 namespace UQAC_TP1_IA.mansion
 {
     /// <summary>
+    /// <inheritdoc cref="IState"/>
     /// Représente l'état du manoir, contient uniquement une perception de celui-ci.
     ///
     /// Il y a également l'implémentation de la fonction Equals pour comparer deux états.

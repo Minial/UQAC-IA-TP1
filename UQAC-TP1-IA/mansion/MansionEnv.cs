@@ -9,15 +9,12 @@ using UQAC_TP1_IA.core;
 namespace UQAC_TP1_IA.mansion
 {
     /// <summary>
-    /// Classe représentant un environnement
-    /// Champs :
-    ///     - posRobto : position du robot dans le manoir
-    ///     - tailleManoir : taille du manoir
-    ///     - mesurePerf : mesure de performance
-    ///     - manoir : carte du manoir
-    /// Méthodes :
-    ///     - AjouterDP() : ajouter de la poussière / diamant
-    ///     - process() : gère le déroulement
+    /// <inheritdoc cref="IEnvironment"/>
+    /// 
+    /// Voir la doc de [IEnvironment] pour davantage d'informations. Implémente simplement les fonctions de l'interface
+    /// pour le problème du manoir.
+    /// Il contient une liste de pièces (Room), un agent (environnement single-agent), sa position et sa mesure de
+    /// performance.
     /// </summary>
     public class MansionEnv : IEnvironment
     {
@@ -44,7 +41,8 @@ namespace UQAC_TP1_IA.mansion
         
 
         /// <summary>
-        /// @return
+        /// <inheritdoc cref="IEnvironment.Observe"/>
+        /// @return la perception du manoir
         /// </summary>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public IPercept Observe() {
@@ -64,7 +62,10 @@ namespace UQAC_TP1_IA.mansion
         }
 
         /// <summary>
-        /// @param MansionAction
+        /// <inheritdoc cref="IEnvironment.Action"/>
+        /// 
+        /// @param action : effectue cette action dans le manoir
+        /// @param _ (Agent) : single agent donc on sait forcement quel agent effectue l'action
         /// </summary>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public void Action(IAction action, Agent _)
@@ -93,12 +94,21 @@ namespace UQAC_TP1_IA.mansion
             }
             _performanceMeasure.Electricity++;
         }
-
+        
+        /// <summary>
+        /// <inheritdoc cref="IEnvironment.PerformanceMeasure"/>
+        /// @return le score de la mesure de performance
+        /// </summary>
         public int PerformanceMeasure(Agent _) => _performanceMeasure.Score();
 
+        /// <summary>
+        /// @return la mesure de performance au complet
+        /// </summary>
         public MansionPerformanceMeasure PerformancMeasureDetails() => _performanceMeasure;
         
-
+        /// <summary>
+        /// Défini le nouvel agent du manoir (single-agent, donc supprimer potentiellement l'autre)
+        /// </summary>
         public void SetAgent(Agent agent, Position initialPosition)
         {
             _agent = (MansionAgent) agent;
@@ -106,6 +116,9 @@ namespace UQAC_TP1_IA.mansion
             _performanceMeasure = new MansionPerformanceMeasure();
         }
         
+        /// <summary>
+        /// Initiliase les pièces du manoir
+        /// </summary>
         private void InitBoard()
         {
             Rooms = new List<Room>();
@@ -119,9 +132,7 @@ namespace UQAC_TP1_IA.mansion
         }
         
         /// <summary>
-        /// valDP : diamant ou poussiere ou les 2
-        /// valX  : valeur en X dans le tableau
-        /// valY  : valeur en Y dans le tableau 
+        /// Méthode de génération de poussière ou de diamant dans une pièce aléatoire
         /// </summary>
         [MethodImpl(MethodImplOptions.Synchronized)]
         private void SporadicObjectGeneration()
@@ -138,7 +149,12 @@ namespace UQAC_TP1_IA.mansion
     }
     
 
-
+    /// <summary>
+    /// Mesure de performance pour un agent évoluant dans le manoir
+    ///
+    /// Le score est simplement une combinaison linéaire des informations contenu dans le mesure de performance
+    /// (DiamondPick, DirtClean, DiamondClean, Electricity)
+    /// </summary>
     public class MansionPerformanceMeasure
     {
         public int DiamondPick;
@@ -167,8 +183,9 @@ namespace UQAC_TP1_IA.mansion
     /// <summary>
     /// Classe représentant une piece du manoir
     /// Champs :
-    ///     - poussiere : décrit la présence de poussiere ou non
-    ///     - diamant : décrit la présence de diamant ou non
+    ///     - dirt : décrit la présence de poussiere ou non
+    ///     - diamond : décrit la présence de diamant ou non
+    ///     - pos: position de la pièce dans le manoir
     /// </summary>
     public class Room
     {
@@ -195,7 +212,10 @@ namespace UQAC_TP1_IA.mansion
             return otherRoom.pos.Equals(pos) && otherRoom.diamond == diamond && otherRoom.dirt == dirt;
         }
     }
-
+    
+    /// <summary>
+    /// Position dans un espace à 2 dimensions
+    /// </summary>
     public class Position 
     {
         public int x, y;
