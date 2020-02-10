@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace UQAC_TP1_IA.core.functions
 {
-    public class DepthLimitedSearch : AgentFunction 
+    public class IterativeDeepeningSearch : AgentFunction 
     {
         /// <summary>
         /// @param Problem 
